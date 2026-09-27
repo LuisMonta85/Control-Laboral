@@ -1,4 +1,4 @@
-const KEY='control_laboral_v3_2026';
+const KEY='control_laboral_nuevo_2026_v2';
 const months=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 const seed=[
 ['2026-01-02','vacaciones',0,1,''],['2026-01-31','extra',6,0,''],['2026-02-21','extra',6,0,''],
@@ -8,7 +8,8 @@ const seed=[
 ].map((x,i)=>({id:'seed-'+i,date:x[0],type:x[1],hours:x[2],days:x[3],note:x[4]}));
 const notes=[{date:'2026-01-01',type:'noche',note:'S.3 Completa'},{date:'2026-02-01',type:'noche',note:'S.6 Completa'},{date:'2026-02-02',type:'noche',note:'S.9 · 3 noches'},{date:'2026-04-01',type:'noche',note:'S.15 Completa'},{date:'2026-05-18',type:'noche',note:'S.18 Completa'},{date:'2026-06-21',type:'noche',note:'S.21 · 4 noches'}].map((x,i)=>({id:'note-'+i,date:x.date,type:x.type,hours:0,days:0,note:x.note}));
 function defaults(){return {year:2026,extraPrice:28.84,annualOwn:20,annualVac:23,carryVac:5,boteStart:10,records:[...seed,...notes]}}
-let db=JSON.parse(localStorage.getItem(KEY)||'null')||defaults();
+let db=JSON.parse(localStorage.getItem(KEY)||'null');
+if(!db || !Array.isArray(db.records) || db.records.length===0){ db=defaults(); save(); }
 function save(){localStorage.setItem(KEY,JSON.stringify(db));}
 function totals(){let r=db.records;return {extra:r.filter(x=>x.type==='extra').reduce((a,x)=>a+(+x.hours||0),0),bote:r.filter(x=>x.type==='bote').reduce((a,x)=>a+(+x.hours||0),0)+db.boteStart,vac:r.filter(x=>x.type==='vacaciones').reduce((a,x)=>a+(+x.days||0),0),own:r.filter(x=>x.type==='propio').reduce((a,x)=>a+(+x.days||0),0),nights:r.filter(x=>x.type==='noche').length,travel:r.filter(x=>x.type==='desplazamiento').length}}
 const labels={extra:'Horas extra',bote:'Horas de bote',vacaciones:'Vacaciones',propio:'Asunto propio',desplazamiento:'Desplazamiento',noche:'Noche'};
