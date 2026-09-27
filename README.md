@@ -1,9 +1,9 @@
 # Control Laboral
 
-Proyecto independiente y autocontenido. Solo necesita `index.html` para funcionar en GitHub Pages.
+Versión modificada del proyecto Control Laboral.
 
-## Datos iniciales
-Basado en `Cuentas 2026.xlsx`: 36 h de horas extra, 5 días de asuntos propios, 23 días de vacaciones, 5 días de vacaciones del año anterior y 10 h de bote.
-
-## GitHub Pages
-Sube `index.html` al repositorio y configura Settings > Pages > Deploy from branch > main > /(root).
+Cambios:
+- Se eliminó el bloque de Resumen mensual de la pantalla principal.
+- Se añadió la pestaña independiente "Resumen mensual".
+- Configuración editable: precio hora extra, vacaciones anuales, vacaciones arrastradas, asuntos propios y bote inicial.
+- Se mantiene IndexedDB y la migración desde los datos existentes.
