@@ -1,9 +1,5 @@
-# Control Laboral
+# Control Laboral – Entrada rápida
 
-Versión modificada del proyecto Control Laboral.
-
-Cambios:
-- Se eliminó el bloque de Resumen mensual de la pantalla principal.
-- Se añadió la pestaña independiente "Resumen mensual".
-- Configuración editable: precio hora extra, vacaciones anuales, vacaciones arrastradas, asuntos propios y bote inicial.
-- Se mantiene IndexedDB y la migración desde los datos existentes.
+Versión basada en la versión con Noches por semanas, Resumen mensual y Configuración editable.
+Incluye Entrada rápida para registrar horas extra, bote, vacaciones, asuntos propios, noches y desplazamientos mediante frases sencillas.
+Mantiene IndexedDB y las copias de seguridad existentes.
