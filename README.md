@@ -1,5 +1,3 @@
-# Control Laboral – Entrada rápida
+# Control Laboral + Supabase
 
-Versión basada en la versión con Noches por semanas, Resumen mensual y Configuración editable.
-Incluye Entrada rápida para registrar horas extra, bote, vacaciones, asuntos propios, noches y desplazamientos mediante frases sencillas.
-Mantiene IndexedDB y las copias de seguridad existentes.
+Versión corregida: al iniciar sesión, Supabase es la fuente de verdad y la aplicación NO sube automáticamente los datos locales. Esto evita duplicados al abrir la aplicación.
