@@ -1,4 +1,4 @@
-const CACHE_NAME = "control-laboral-v7-salario";
+const CACHE_NAME = "control-laboral-v8-salary-sync";
 const APP_SHELL = [
   "./",
   "./index.html",
