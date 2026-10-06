@@ -51,8 +51,12 @@ function salarySummary(){
 }
 function salary(){
   const now=new Date();
-  const y=Number(window.salaryYear||2026);
-  const m=Number(window.salaryMonth||now.getMonth()+1);
+  const rawYear=Number(window.salaryYear);
+  const rawMonth=Number(window.salaryMonth);
+  const y=Number.isInteger(rawYear)&&[2026,2027].includes(rawYear)?rawYear:2026;
+  const m=Number.isInteger(rawMonth)&&rawMonth>=1&&rawMonth<=12?rawMonth:now.getMonth()+1;
+  window.salaryYear=y;
+  window.salaryMonth=m;
   const current=salaryRecord(y,m);
   const st=salarySummary();
   const rows=salaryMonths();
