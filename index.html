@@ -50,20 +50,63 @@ function salarySummary(){
   return {gross,net,avg,count:rows.length};
 }
 function salary(){
-  const now=new Date(), y=Number(window.salaryYear||2026), m=Number(window.salaryMonth||now.getMonth()+1);
-  const current=salaryRecord(y,m), st=salarySummary(), rows=salaryMonths();
-  return `<div class="page-title"><div><h2>💶 Salario</h2><p>Registra tus nóminas y analiza cómo evoluciona tu sueldo.</p></div><div class="actions"><select class="btn" style="background:white;border:1px solid var(--line)" onchange="window.salaryYear=Number(this.value);render('salario')">${[2026,2027].map(v=>`<option value="${v}" ${v===y?'selected':''}>${v}</option>`).join('')}</select><select class="btn" style="background:white;border:1px solid var(--line)" onchange="window.salaryMonth=Number(this.value);render('salario')">${months.map((name,i)=>`<option value="${i+1}" ${i+1===m?'selected':''}>${name}</option>`).join('')}</select><button class="btn primary" onclick="openSalaryModal()">＋ ${current?'Editar':'Añadir'} nómina</button></div></div>
+  const now=new Date();
+  const y=Number(window.salaryYear||2026);
+  const m=Number(window.salaryMonth||now.getMonth()+1);
+  const current=salaryRecord(y,m);
+  const st=salarySummary();
+  const rows=salaryMonths();
+
+  return `<div class="page-title">
+    <div><h2>💶 Salario</h2><p>Consulta y registra tus nóminas mes a mes.</p></div>
+    <div class="actions">
+      <select class="btn" style="background:white;border:1px solid var(--line)" onchange="window.salaryYear=Number(this.value);render('salario')">
+        ${[2026,2027].map(v=>`<option value="${v}" ${v===y?'selected':''}>${v}</option>`).join('')}
+      </select>
+      <select class="btn" style="background:white;border:1px solid var(--line)" onchange="window.salaryMonth=Number(this.value);render('salario')">
+        ${months.map((name,i)=>`<option value="${i+1}" ${i+1===m?'selected':''}>${name}</option>`).join('')}
+      </select>
+      <button class="btn primary" onclick="openSalaryModal()">＋ ${current?'Editar':'Añadir'} nómina</button>
+    </div>
+  </div>
+
   <div class="cards">
-    <div class="card metric"><div class="label">Nómina seleccionada · neto</div><div class="value">${current?money(Number(current.net)||0):'—'}</div><div class="sub">${current?'Bruto: '+money(Number(current.gross)||0):'Todavía no registrada'}</div></div>
+    <div class="card metric"><div class="label">Neto ${months[m-1]} ${y}</div><div class="value">${current?money(Number(current.net)||0):'—'}</div><div class="sub">${current?'Nómina registrada':'Sin nómina registrada'}</div></div>
+    <div class="card metric"><div class="label">Bruto ${months[m-1]} ${y}</div><div class="value">${current?money(Number(current.gross)||0):'—'}</div><div class="sub">${current?'Nómina registrada':'Sin nómina registrada'}</div></div>
     <div class="card metric"><div class="label">Neto acumulado</div><div class="value">${money(st.net)}</div><div class="sub">${st.count} nóminas registradas</div></div>
-    <div class="card metric"><div class="label">Media neta</div><div class="value">${st.count?money(st.avg):'—'}</div><div class="sub">Media de meses registrados</div></div>
-    <div class="card metric"><div class="label">Bruto acumulado</div><div class="value">${money(st.gross)}</div><div class="sub">Todos los meses registrados</div></div>
+    <div class="card metric"><div class="label">Media neta mensual</div><div class="value">${st.count?money(st.avg):'—'}</div><div class="sub">Meses registrados</div></div>
   </div>
-  <div class="grid2">
-    <div class="card"><h3>Resumen anual</h3><div class="row"><span>Bruto acumulado</span><strong>${money(st.gross)}</strong></div><div class="row"><span>Neto acumulado</span><strong>${money(st.net)}</strong></div><div class="row"><span>Media neta</span><strong>${st.count?money(st.avg):'—'}</strong></div><div class="row"><span>Nóminas registradas</span><strong>${st.count}</strong></div></div>
-    <div class="card"><h3>Para analizar tu sueldo</h3><p class="sub" style="line-height:1.6">Con varios meses podremos comparar el bruto y el neto y ver cómo evoluciona tu remuneración.</p></div>
+
+  <div class="card" style="margin-top:14px">
+    <div class="page-title" style="margin-bottom:10px">
+      <div><h3 style="margin:0">Nómina de ${months[m-1]} ${y}</h3><p class="sub">${current?'Datos de la nómina seleccionada':'No hay una nómina registrada para este mes.'}</p></div>
+      ${current?`<button class="btn" onclick="openSalaryModal()">Editar</button>`:`<button class="btn primary" onclick="openSalaryModal()">＋ Añadir nómina</button>`}
+    </div>
+    ${current?`
+      <div class="grid2">
+        <div class="card"><div class="label">Bruto mensual</div><div class="value">${money(Number(current.gross)||0)}</div></div>
+        <div class="card"><div class="label">Neto mensual</div><div class="value">${money(Number(current.net)||0)}</div></div>
+      </div>
+      ${current.notes?`<div style="margin-top:12px"><b>Notas:</b><div class="sub" style="margin-top:5px;white-space:pre-wrap">${current.notes}</div></div>`:''}
+    `:`<div class="sub">Selecciona otro mes arriba para consultar su nómina.</div>`}
   </div>
-  <div class="card" style="margin-top:14px"><h3>Histórico mensual</h3><div style="overflow:auto"><table class="table"><tr><th>Mes</th><th>Bruto</th><th>Neto</th><th></th></tr>${rows.length?rows.map(x=>`<tr><td>${months[Number(x.salary_month)-1]} ${x.salary_year}</td><td>${money(Number(x.gross)||0)}</td><td><b>${money(Number(x.net)||0)}</b></td><td class="actions-cell"><button class="btn" onclick="window.salaryYear=${Number(x.salary_year)};window.salaryMonth=${Number(x.salary_month)};openSalaryModal()">Editar</button><button class="btn danger" onclick="deleteSalary('${x.id}')">Borrar</button></td></tr>`).join(''):`<tr><td colspan="4" class="sub">Aún no has registrado ninguna nómina.</td></tr>`}</table></div></div>`;
+
+  <div class="card" style="margin-top:14px">
+    <h3>Histórico mensual</h3>
+    <div style="overflow:auto"><table class="table">
+      <tr><th>Mes</th><th>Bruto</th><th>Neto</th><th></th></tr>
+      ${rows.length?rows.map(x=>`<tr ${Number(x.salary_year)===y&&Number(x.salary_month)===m?'style="font-weight:700"':''}>
+        <td>${months[Number(x.salary_month)-1]} ${x.salary_year}</td>
+        <td>${money(Number(x.gross)||0)}</td>
+        <td><b>${money(Number(x.net)||0)}</b></td>
+        <td class="actions-cell">
+          <button class="btn" onclick="window.salaryYear=${Number(x.salary_year)};window.salaryMonth=${Number(x.salary_month)};render('salario')">Ver</button>
+          <button class="btn" onclick="window.salaryYear=${Number(x.salary_year)};window.salaryMonth=${Number(x.salary_month)};openSalaryModal()">Editar</button>
+          <button class="btn danger" onclick="deleteSalary('${x.id}')">Borrar</button>
+        </td>
+      </tr>`).join(''):`<tr><td colspan="4" class="sub">Aún no has registrado ninguna nómina.</td></tr>`}
+    </table></div>
+  </div>`;
 }
 function openSalaryModal(){
   const y=Number(window.salaryYear||2026),m=Number(window.salaryMonth||new Date().getMonth()+1),x=salaryRecord(y,m);
